@@ -1,3 +1,5 @@
+//Wee, Filbert Heinrich T.	201701042	WFQR
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +12,7 @@ typedef struct node{				// node
 	int frequency;
 	struct node *left;
 	struct node *right;
+	int queued;
 }Node;
 
 Node* make_node(char d, int f){			// init_node		(unused)
@@ -22,15 +25,16 @@ Node* make_node(char d, int f){			// init_node		(unused)
 
 Node* pQueue[MAX];								//make queue
 int n;
+int fifo = 0;
 
 void HEAPIFY(int r){					// make min heap
 	Node* key = pQueue[r];
 	int i = r;
 	int j = 2*i;
 	while(j<=n){													// same frequency arrangment if ASCII
-		if(j<n && (pQueue[j+1]->frequency < pQueue[j]->frequency || (pQueue[j+1]->frequency == pQueue[j]->frequency && pQueue[j+1]->data < pQueue[j]->data)))
+		if(j<n && (pQueue[j+1]->frequency < pQueue[j]->frequency || (pQueue[j+1]->frequency == pQueue[j]->frequency && pQueue[j+1]->queued < pQueue[j]->queued)))
 			j+=1;
-		if(pQueue[j]->frequency < key->frequency || (pQueue[j]->frequency == key->frequency && pQueue[j]->data < key->data)){
+		if(pQueue[j]->frequency < key->frequency || (pQueue[j]->frequency == key->frequency && pQueue[j]->queued < key->queued)){
 			pQueue[i] = pQueue[j];
 			i = j;
 			j = 2*i;
@@ -48,12 +52,13 @@ void P_insert(Node* node){					// priority enqueue
 		n++;		
 		int i = n;
 		int j = i/2;
-		while(i>1 && (pQueue[j]->frequency > node->frequency/*)){//*/|| (pQueue[j]->frequency==node->frequency&&pQueue[j]->data>node->data))){
+		while(i>1 && (pQueue[j]->frequency > node->frequency/*)){//*/|| (pQueue[j]->frequency==node->frequency&&pQueue[j]->queued<node->queued))){
 			pQueue[i] = pQueue[j];
 			i = j;
 			j = i/2;
 		}
 		pQueue[i] = node;
+		pQueue[i]->queued = fifo++;
 	}
 }
 
