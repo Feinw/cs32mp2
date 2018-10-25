@@ -15,14 +15,6 @@ typedef struct node{				// node
 	int queued;
 }Node;
 
-Node* make_node(char d, int f){			// init_node		(unused)
-	Node* temp = (Node*)malloc(sizeof(Node));
-	temp->data = d;
-	temp->frequency = f;
-	temp->left = NULL;
-	temp->right = NULL;
-}
-
 Node* pQueue[MAX];								//make queue
 int n;
 int fifo = 0;
